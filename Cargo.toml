@@ -1,0 +1,11 @@
+[package]
+name = "rlnd"
+version = "0.1.0"
+authors = ["Jean Pierre Dudey <jeandudey@hotmail.com>"]
+
+[[bin]]
+name = "rlnd"
+path = "rlnd/main.rs"
+
+[dependencies.lightning]
+git = "https://github.com/rust-bitcoin/lightning"
