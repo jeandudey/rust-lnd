@@ -1,20 +1,17 @@
 [package]
-name = "rlnd"
+name = "rlnd-chainintf"
 version = "0.1.0"
 authors = ["Jean Pierre Dudey <jeandudey@hotmail.com>"]
 
 [features]
-bitcoind = ["rlnd-chainintf/bitcoind"]
-
-[[bin]]
-name = "rlnd"
-path = "rlnd/main.rs"
-
-[workspace]
-members = ["chainintf"]
+bitcoind = ["bitcoin-rpc"]
 
 [dependencies]
-rlnd-chainintf = { version = "0.1", path = "chainintf/" }
+bitcoin-amount = "0.1"
+
+[dependencies.bitcoin-rpc]
+optional = true
+git = "https://github.com/jeandudey/rust-bitcoin-rpc/"
 
 [dependencies.lightning]
 git = "https://github.com/rust-bitcoin/rust-lightning"
