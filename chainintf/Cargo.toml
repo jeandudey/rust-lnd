@@ -6,12 +6,13 @@ authors = ["Jean Pierre Dudey <jeandudey@hotmail.com>"]
 [features]
 bitcoind = ["bitcoin-rpc"]
 
-[dependencies]
-bitcoin-amount = "0.1"
+[dependencies.bitcoin-amount]
+features = ["strason"]
+version = "0.1"
 
 [dependencies.bitcoin-rpc]
 optional = true
 git = "https://github.com/jeandudey/rust-bitcoin-rpc/"
 
 [dependencies.lightning]
-git = "https://github.com/rust-bitcoin/rust-lightning"
+git = "https://github.com/rust-bitcoin/rust-lightning/"

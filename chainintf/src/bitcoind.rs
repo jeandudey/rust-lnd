@@ -1,13 +1,17 @@
 //! Bitcoind's lightning backend.
 
-use bitcoin_rpc::BitcoinRpc;
-use bitcoin_amount::Amount;
+use std::cmp;
+
+use bitcoin_rpc::{EstimateMode, BitcoinRpc};
+use bitcoin_amount::{Amount, IntoBtc};
 
 use lightning;
 use lightning::chain::chaininterface::ConfirmationTarget;
 
 pub struct FeeEstimator {
     client: BitcoinRpc,
+    /// This is the minimum fee rate in sat/kB, of the backend node.
+    min_feerate: Amount,
 }
 
 impl FeeEstimator {
@@ -16,13 +20,17 @@ impl FeeEstimator {
         user: Option<String>,
         pass: Option<String>
     ) -> FeeEstimator {
-        FeeEstimator {
-            client: BitcoinRpc::new(uri, user, pass),
-        }
-    }
+        let client = BitcoinRpc::new(uri, user, pass);
 
-    fn fallback_fee() -> Amount {
-        Amount::from_btc(0.0001)
+        let networkinfo = client.getnetworkinfo().expect("couldn't call getnetworkinfo");
+        let relayfee = Amount::from_btc(&networkinfo.relayfee);
+
+        assert!(relayfee > Amount::zero());
+
+        FeeEstimator {
+            client: client,
+            min_feerate: relayfee,
+        }
     }
 }
 
@@ -31,25 +39,28 @@ impl lightning::chain::chaininterface::FeeEstimator for FeeEstimator {
         &self,
         confirmation_target: ConfirmationTarget
     ) -> u64 {
-        let blocks_to_wait = match confirmation_target {
-            ConfirmationTarget::Background => 25,
-            ConfirmationTarget::Normal => 6,
-            ConfirmationTarget::HighPriority => 1,
+        let (blocks_to_wait, estimate_mode) = match confirmation_target {
+            ConfirmationTarget::Background => (144, EstimateMode::Economical),
+            ConfirmationTarget::Normal => (18, EstimateMode::Economical),
+            ConfirmationTarget::HighPriority => (6, EstimateMode::Conservative),
         };
 
-        let maybe_fee = self.client.estimatefee(blocks_to_wait);
+        let maybe_fee = self.client
+            .estimatesmartfee(blocks_to_wait, estimate_mode)
+            .map(|response| response.feerate.into_btc());
 
-        let fee_per_kb;
-        match maybe_fee {
-            Ok(fee) => fee_per_kb = fee,
-            Err(_e) => {
-                // TODO: log the error
-                fee_per_kb = FeeEstimator::fallback_fee();
-            }
-        }
+        let sat_per_kbyte = match maybe_fee {
+            Ok(fee) => fee,
+            Err(_) => self.min_feerate,
+        };
 
-        assert!(fee_per_kb > Amount::zero());
+        assert!(sat_per_kbyte > Amount::zero());
 
-        unimplemented!();
+        let sat_per_kw = (sat_per_kbyte / Amount::from_sat(250)) +
+                          Amount::from_sat(3);
+
+        let sat_per_kw = cmp::max(sat_per_kw, Amount::from_sat(253));
+
+        sat_per_kw.into_inner() as u64
     }
 }
