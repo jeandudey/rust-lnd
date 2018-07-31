@@ -18,7 +18,7 @@ impl FeeEstimator {
     pub fn new(
         uri: String,
         user: Option<String>,
-        pass: Option<String>
+        pass: Option<String>,
     ) -> FeeEstimator {
         let client = BitcoinRpc::new(uri, user, pass);
 

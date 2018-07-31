@@ -37,10 +37,19 @@ dependencies = [
 [[package]]
 name = "bitcoin-rpc"
 version = "0.2.0"
-source = "git+https://github.com/jeandudey/rust-bitcoin-rpc/#789330909825646c34240e871c0d5819820dd533"
+source = "git+https://github.com/jeandudey/rust-bitcoin-rpc/#d475d43ca097c801b1b0c293851cfc0a796a17a9"
 dependencies = [
- "bitcoin-amount 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bitcoin-rpc-json 0.1.0 (git+https://github.com/jeandudey/rust-bitcoin-rpc/)",
  "jsonrpc 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.70 (registry+https://github.com/rust-lang/crates.io-index)",
+ "strason 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "bitcoin-rpc-json"
+version = "0.1.0"
+source = "git+https://github.com/jeandudey/rust-bitcoin-rpc/#d475d43ca097c801b1b0c293851cfc0a796a17a9"
+dependencies = [
  "serde 1.0.70 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.70 (registry+https://github.com/rust-lang/crates.io-index)",
  "strason 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -218,7 +227,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "lightning"
 version = "0.0.4"
-source = "git+https://github.com/rust-bitcoin/rust-lightning/#6919cd34f71682b3afc2241b6d1f2495ca1c99b6"
+source = "git+https://github.com/rust-bitcoin/rust-lightning/#830343f12980dd3dddc960721e67acc8885436f0"
 dependencies = [
  "bitcoin 0.13.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "cc 1.0.18 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -531,6 +540,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum bitcoin-amount 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "0bd5ae6712113fac4edfa917b1d865801f476b021a108e6749ce20d3057abb9e"
 "checksum bitcoin-bech32 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "c9da5d68e7f7d4d64dcbf93647ce9508263cc4adf7d7b3e755663f035ef9b32c"
 "checksum bitcoin-rpc 0.2.0 (git+https://github.com/jeandudey/rust-bitcoin-rpc/)" = "<none>"
+"checksum bitcoin-rpc-json 0.1.0 (git+https://github.com/jeandudey/rust-bitcoin-rpc/)" = "<none>"
 "checksum bitflags 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "d0c54bb8f454c567f21197eefcdbf5679d0bd99f2ddbe52e84c77061952e6789"
 "checksum byteorder 1.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "8389c509ec62b9fe8eca58c502a0acaf017737355615243496cde4994f8fa4f9"
 "checksum cc 1.0.18 (registry+https://github.com/rust-lang/crates.io-index)" = "2119ea4867bd2b8ed3aecab467709720b2d55b1bcfe09f772fd68066eaf15275"
